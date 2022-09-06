@@ -3,7 +3,12 @@ import Form from "react-bootstrap/Form";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-const SearchBar = ({ handleSubmit, handleChange, searchValue }) => {
+const SearchBar = ({
+  handleSubmit,
+  handleChange,
+  handleReset,
+  searchValue
+}) => {
   return (
     <Row>
       <Col>
@@ -11,12 +16,15 @@ const SearchBar = ({ handleSubmit, handleChange, searchValue }) => {
           <Form.Control
             className="me-2"
             type="text"
-            placeholder="Search characters"
+            placeholder="Search character names"
             onChange={handleChange}
             value={searchValue}
           />
-          <Button variant="primary" type="submit">
+          <Button variant="primary" type="submit" className="me-2">
             Search
+          </Button>
+          <Button variant="secondary" onClick={handleReset}>
+            Reset
           </Button>
         </Form>
       </Col>
