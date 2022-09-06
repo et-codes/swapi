@@ -1,24 +1,50 @@
 import Button from 'react-bootstrap/Button';
 
-const PageNav = ({ page, nextPage, prevPage }) => {
+const PageNav = ({ page, nextPage, prevPage, lastPage, gotoFirstPage, gotoLastPage }) => {
   return (
     <caption>
       <Button
-        variant="outline-secondary"
+        className="me-1"
+        variant="secondary"
+        size="sm"
+        onClick={gotoFirstPage}
+        disabled={page === '1' ? true : false}
+      >
+        {'|<'}
+      </Button>
+      <Button
+        variant="secondary"
         size="sm"
         onClick={prevPage}
         disabled={!prevPage ? true : false}
       >
         {'<'}
       </Button>
-      <span className="px-2">{`Page: ${page}`}</span>
       <Button
-        variant="outline-secondary"
+        className="mx-1"
+        variant="secondary"
+        size="sm"
+        disabled
+      >
+        {`Page: ${page}`}
+      </Button>
+      <Button
+        className="me-1"
+        variant="secondary"
         size="sm"
         onClick={nextPage}
         disabled={!nextPage ? true : false}
       >
         {'>'}
+      </Button>
+      <Button
+        className="me-1"
+        variant="secondary"
+        size="sm"
+        onClick={gotoLastPage}
+        disabled={page === lastPage ? true : false}
+      >
+        {'>|'}
       </Button>
     </caption>
   );

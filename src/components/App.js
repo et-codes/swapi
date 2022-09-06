@@ -5,7 +5,6 @@ import Container from 'react-bootstrap/Container';
 import Header from './Header';
 import SearchBar from './SearchBar';
 import CharacterTable from './CharacterTable';
-import Footer from './Footer';
 
 const App = () => {
   const baseUrl = 'https://swapi.dev/api/people/';
@@ -15,6 +14,7 @@ const App = () => {
   const [nextPage, setNextPage] = useState(`${baseUrl}?page=2`);
   const [prevPage, setPrevPage] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [lastPage, setLastPage] = useState('');
 
   const getData = (url) => {
     setLoading(true);
@@ -23,6 +23,7 @@ const App = () => {
         setCharacters(response.data.results);
         setNextPage(response.data.next);
         setPrevPage(response.data.previous);
+        setLastPage(Math.ceil(response.data.count / 10).toString());
       })
       .then(() => setLoading(false))
       .catch(err => console.error(err));
@@ -57,6 +58,16 @@ const App = () => {
     if (prevPage) setPage(prevPage);
   }
 
+  const getFirstPage = (e) => {
+    setPage(`${baseUrl}?page=1`);
+  }
+
+  const getLastPage = (e) => {
+    console.log(lastPage);
+    console.log(`${baseUrl}?page=${lastPage}`);
+    setPage(`${baseUrl}?page=${lastPage}`);
+  }
+
   return (
     <Container>
       <Header />
@@ -71,12 +82,15 @@ const App = () => {
         page={
           page.match(/page=(\d*)/)
             ? page.match(/page=(\d*)/)[1]
-            : '1'}
+            : '1'
+        }
         isLoading={loading}
         nextPage={nextPage && getNextPage}
         prevPage={prevPage && getPrevPage}
+        lastPage={lastPage}
+        gotoFirstPage={getFirstPage}
+        gotoLastPage={getLastPage}
       />
-      <Footer />
     </Container>
   );
 }
