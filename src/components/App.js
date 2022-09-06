@@ -36,7 +36,7 @@ const App = () => {
 
   const searchCharacters = (e) => {
     if (!searchString) return;
-    getData(`${baseUrl}/?search=${searchString}`);
+    setPage(`${baseUrl}/?search=${searchString}`);
     e.preventDefault();
   }
 
@@ -68,7 +68,10 @@ const App = () => {
       />
       <CharacterTable
         chars={characters}
-        page={page.match(/page=(\d*)/)[1]}
+        page={
+          page.match(/page=(\d*)/)
+            ? page.match(/page=(\d*)/)[1]
+            : '1'}
         isLoading={loading}
         nextPage={nextPage && getNextPage}
         prevPage={prevPage && getPrevPage}
