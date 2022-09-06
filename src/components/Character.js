@@ -2,8 +2,10 @@ import { useState } from 'react';
 import axios from 'axios';
 
 const Character = ({ character }) => {
-  const [homeworld, setHomeworld] = useState('');
-  const [species, setSpecies] = useState('');
+  const loadingText =
+    <span className="text-muted fst-italic">loading...</span>;
+  const [homeworld, setHomeworld] = useState(loadingText);
+  const [species, setSpecies] = useState(loadingText);
 
   if (character.homeworld) {
     axios.get(character.homeworld)

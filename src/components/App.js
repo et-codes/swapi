@@ -7,13 +7,13 @@ import SearchBar from './SearchBar';
 import CharacterTable from './CharacterTable';
 import Footer from './Footer';
 
-function App() {
+const App = () => {
   const baseUrl = 'https://swapi.dev/api/people/';
   const [searchString, setSearchString] = useState('');
   const [characters, setCharacters] = useState([]);
   const [page, setPage] = useState(`${baseUrl}?page=1`);
-  const [nextPage, setNextPage] = useState(``);
-  const [prevPage, setPrevPage] = useState('');
+  const [nextPage, setNextPage] = useState(`${baseUrl}?page=2`);
+  const [prevPage, setPrevPage] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const getData = (url) => {
@@ -46,14 +46,14 @@ function App() {
 
   const resetSearchBar = (e) => {
     setSearchString('');
-    getPage(page);
+    setPage(`${baseUrl}?page=1`);
   }
 
-  const pageUp = (e) => {
+  const getNextPage = (e) => {
     if (nextPage) setPage(nextPage);
   }
 
-  const pageDown = (e) => {
+  const getPrevPage = (e) => {
     if (prevPage) setPage(prevPage);
   }
 
@@ -70,6 +70,8 @@ function App() {
         chars={characters}
         page={page.match(/page=(\d*)/)[1]}
         isLoading={loading}
+        nextPage={nextPage && getNextPage}
+        prevPage={prevPage && getPrevPage}
       />
       <Footer />
     </Container>

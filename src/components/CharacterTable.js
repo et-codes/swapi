@@ -1,8 +1,9 @@
 import Character from './Character';
+import PageNav from './PageNav';
 import Table from 'react-bootstrap/Table';
 import { ThreeDots } from 'react-loader-spinner';
 
-const CharacterTable = ({ chars, page, isLoading }) => {
+const CharacterTable = ({ chars, page, isLoading, nextPage, prevPage }) => {
   const charsToDisplay = [];
   chars.forEach(char => {
     charsToDisplay.push(<Character key={char.name} character={char} />);
@@ -31,7 +32,7 @@ const CharacterTable = ({ chars, page, isLoading }) => {
       <tbody>
         {charsToDisplay}
       </tbody>
-      <caption>{`Page: ${page} >`}</caption>
+      <PageNav page={page} nextPage={nextPage} prevPage={prevPage} />
     </Table>
   );
 };
