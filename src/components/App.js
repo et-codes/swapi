@@ -8,33 +8,35 @@ import CharacterTable from './CharacterTable';
 import Footer from './Footer';
 
 function App() {
+  const baseUrl = 'https://swapi.dev/api/people/';
   const [searchString, setSearchString] = useState('');
   const [characters, setCharacters] = useState([]);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(`${baseUrl}?page=1`);
+  const [nextPage, setNextPage] = useState(``);
+  const [prevPage, setPrevPage] = useState('');
   const [loading, setLoading] = useState(false);
-  const baseUrl = 'https://swapi.dev/api/people';
 
-  const getPage = (pageNum) => {
+  const getData = (url) => {
     setLoading(true);
-    axios.get(`${baseUrl}?page=${pageNum}`)
+    axios.get(url)
       .then(response => {
         setCharacters(response.data.results);
+        setNextPage(response.data.next);
+        setPrevPage(response.data.previous);
       })
       .then(() => setLoading(false))
       .catch(err => console.error(err));
   }
 
-  useEffect(() => getPage(page), [page]);
+  const getPage = () => {
+    getData(page);
+  }
+
+  useEffect(getPage, [page]);
 
   const searchCharacters = (e) => {
     if (!searchString) return;
-    setLoading(true);
-    axios.get(`${baseUrl}/?search=${searchString}`)
-      .then(response => {
-        setCharacters(response.data.results);
-      })
-      .then(() => setLoading(false))
-      .catch(err => console.error(err));
+    getData(`${baseUrl}/?search=${searchString}`);
     e.preventDefault();
   }
 
@@ -45,6 +47,14 @@ function App() {
   const resetSearchBar = (e) => {
     setSearchString('');
     getPage(page);
+  }
+
+  const pageUp = (e) => {
+    if (nextPage) setPage(nextPage);
+  }
+
+  const pageDown = (e) => {
+    if (prevPage) setPage(prevPage);
   }
 
   return (
@@ -58,7 +68,7 @@ function App() {
       />
       <CharacterTable
         chars={characters}
-        page={page}
+        page={page.match(/page=(\d*)/)[1]}
         isLoading={loading}
       />
       <Footer />
