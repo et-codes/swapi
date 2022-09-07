@@ -45,24 +45,24 @@ const App = () => {
     setSearchString(e.target.value);
   }
 
-  const resetSearchBar = (e) => {
+  const resetSearchBar = () => {
     setSearchString('');
     setPage(`${baseUrl}?page=1`);
   }
 
-  const getNextPage = (e) => {
+  const getNextPage = () => {
     if (nextPage) setPage(nextPage);
   }
 
-  const getPrevPage = (e) => {
+  const getPrevPage = () => {
     if (prevPage) setPage(prevPage);
   }
 
-  const getFirstPage = (e) => {
+  const getFirstPage = () => {
     setPage(`${baseUrl}?page=1`);
   }
 
-  const getLastPage = (e) => {
+  const getLastPage = () => {
     setPage(`${baseUrl}?page=${lastPage}`);
   }
 

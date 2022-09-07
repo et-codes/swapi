@@ -10,6 +10,9 @@ const PageNav = (props) => {
     gotoLastPage
   } = { ...props };
 
+  const disablePrev = (page === '1');
+  const disableNext = (page === lastPage);
+
   return (
     <caption>
       <Button
@@ -17,7 +20,7 @@ const PageNav = (props) => {
         variant="secondary"
         size="sm"
         onClick={gotoFirstPage}
-        disabled={page === '1' ? true : false}
+        disabled={disablePrev}
       >
         {'|<'}
       </Button>
@@ -25,7 +28,7 @@ const PageNav = (props) => {
         variant="secondary"
         size="sm"
         onClick={prevPage}
-        disabled={!prevPage ? true : false}
+        disabled={disablePrev}
       >
         {'<'}
       </Button>
@@ -42,7 +45,7 @@ const PageNav = (props) => {
         variant="secondary"
         size="sm"
         onClick={nextPage}
-        disabled={!nextPage ? true : false}
+        disabled={disableNext}
       >
         {'>'}
       </Button>
@@ -51,7 +54,7 @@ const PageNav = (props) => {
         variant="secondary"
         size="sm"
         onClick={gotoLastPage}
-        disabled={page === lastPage ? true : false}
+        disabled={disableNext}
       >
         {'>|'}
       </Button>

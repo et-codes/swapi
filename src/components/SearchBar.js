@@ -1,7 +1,4 @@
-import Button from 'react-bootstrap/Button';
-import Form from "react-bootstrap/Form";
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import { Button, Form, Row, Col } from 'react-bootstrap';
 
 const SearchBar = ({
   handleSubmit,
