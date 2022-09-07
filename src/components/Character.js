@@ -3,7 +3,9 @@ import axios from 'axios';
 
 const Character = ({ character }) => {
   const loadingText =
-    <span className="text-muted fst-italic">loading...</span>;
+    <span className="text-muted fst-italic">
+      loading...
+    </span>;
   const [homeworld, setHomeworld] = useState(loadingText);
   const [species, setSpecies] = useState(loadingText);
 

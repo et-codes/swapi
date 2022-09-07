@@ -1,6 +1,15 @@
 import Button from 'react-bootstrap/Button';
 
-const PageNav = ({ page, nextPage, prevPage, lastPage, gotoFirstPage, gotoLastPage }) => {
+const PageNav = (props) => {
+  const {
+    page,
+    nextPage,
+    prevPage,
+    lastPage,
+    gotoFirstPage,
+    gotoLastPage
+  } = { ...props };
+
   return (
     <caption>
       <Button

@@ -3,25 +3,29 @@ import PageNav from './PageNav';
 import Table from 'react-bootstrap/Table';
 import { ThreeDots } from 'react-loader-spinner';
 
-const CharacterTable = ({
-  chars,
-  page,
-  isLoading,
-  nextPage,
-  prevPage,
-  lastPage,
-  gotoFirstPage,
-  gotoLastPage
-}) => {
+const CharacterTable = (props) => {
+  const {
+    chars,
+    page,
+    isLoading,
+    nextPage,
+    prevPage,
+    lastPage,
+    gotoFirstPage,
+    gotoLastPage
+  } = { ...props };
+
   const charsToDisplay = [];
   chars.forEach(char => {
-    charsToDisplay.push(<Character key={char.name} character={char} />);
+    charsToDisplay.push(
+      <Character key={char.name} character={char} />
+    );
   });
 
   if (isLoading) {
     return (
       <div className="d-flex justify-content-center">
-        <ThreeDots />
+        <ThreeDots color="#888" />
       </div>
     );
   }

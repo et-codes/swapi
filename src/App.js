@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Container from 'react-bootstrap/Container';
 
-import Header from './Header';
-import SearchBar from './SearchBar';
-import CharacterTable from './CharacterTable';
+import Header from './components/Header';
+import SearchBar from './components/SearchBar';
+import CharacterTable from './components/CharacterTable';
 
 const App = () => {
   const baseUrl = 'https://swapi.dev/api/people/';
@@ -63,10 +63,11 @@ const App = () => {
   }
 
   const getLastPage = (e) => {
-    console.log(lastPage);
-    console.log(`${baseUrl}?page=${lastPage}`);
     setPage(`${baseUrl}?page=${lastPage}`);
   }
+
+  const match = page.match(/page=(\d*)/);
+  const pageNumber = match ? match[1] : '1';
 
   return (
     <Container>
@@ -79,11 +80,7 @@ const App = () => {
       />
       <CharacterTable
         chars={characters}
-        page={
-          page.match(/page=(\d*)/)
-            ? page.match(/page=(\d*)/)[1]
-            : '1'
-        }
+        page={pageNumber}
         isLoading={loading}
         nextPage={nextPage && getNextPage}
         prevPage={prevPage && getPrevPage}
