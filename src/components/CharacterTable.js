@@ -31,7 +31,7 @@ const CharacterTable = (props) => {
   }
 
   return (
-    <Table striped bordered hover caption={`Page: ${page}`}>
+    <Table striped bordered hover responsive="xs" caption={`Page: ${page}`}>
       <thead>
         <tr>
           <th>Name</th>
