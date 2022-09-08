@@ -15,18 +15,24 @@ const App = () => {
   const [prevPage, setPrevPage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [lastPage, setLastPage] = useState('');
+  const [cache, setCache] = useState(new Map());
 
-  const getData = (url) => {
-    setLoading(true);
-    axios.get(url)
-      .then(response => {
-        setCharacters(response.data.results);
-        setNextPage(response.data.next);
-        setPrevPage(response.data.previous);
-        setLastPage(Math.ceil(response.data.count / 10).toString());
-      })
-      .then(() => setLoading(false))
-      .catch(err => console.error(err));
+  const getData = async (url) => {
+    let response;
+    if (cache.has(url)) {
+      response = cache.get(url);
+    } else {
+      setLoading(true);
+      response = await axios.get(url);
+      const newCache = new Map(cache);
+      newCache.set(url, response);
+      setCache(newCache);
+      setLoading(false);
+    }
+    setCharacters(response.data.results);
+    setNextPage(response.data.next);
+    setPrevPage(response.data.previous);
+    setLastPage(Math.ceil(response.data.count / 10).toString());
   }
 
   const getPage = () => {
