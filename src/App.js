@@ -17,8 +17,6 @@ const App = () => {
   const [lastPage, setLastPage] = useState('');
   const [cache, setCache] = useState(new Map());
 
-
-
   useEffect(() => {
     const getPeople = async (url) => {
       let response;

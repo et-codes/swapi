@@ -15,12 +15,7 @@ const CharacterTable = (props) => {
     gotoLastPage
   } = { ...props };
 
-  const charsToDisplay = [];
-  chars.forEach(char => {
-    charsToDisplay.push(
-      <Character key={char.name} character={char} />
-    );
-  });
+  const charsToDisplay = chars.map(char => <Character key={char.name} character={char} />);
 
   if (isLoading) {
     return (
