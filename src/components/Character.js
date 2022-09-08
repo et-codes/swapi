@@ -28,7 +28,7 @@ const Character = ({ character }) => {
       <td>{character.height}cm</td>
       <td>{character.mass}{character.mass === 'unknown' || 'kg'}</td>
       <td>{homeworld}</td>
-      <td>{species}</td>
+      <td>{species || 'Human'}</td>
     </tr>
   );
 };
