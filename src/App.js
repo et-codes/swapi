@@ -17,29 +17,28 @@ const App = () => {
   const [lastPage, setLastPage] = useState('');
   const [cache, setCache] = useState(new Map());
 
-  const getData = async (url) => {
-    let response;
-    if (cache.has(url)) {
-      response = cache.get(url);
-    } else {
-      setLoading(true);
-      response = await axios.get(url);
-      const newCache = new Map(cache);
-      newCache.set(url, response);
-      setCache(newCache);
-      setLoading(false);
+
+
+  useEffect(() => {
+    const getPeople = async (url) => {
+      let response;
+      if (cache.has(url)) {
+        response = cache.get(url);
+      } else {
+        setLoading(true);
+        response = await axios.get(url);
+        const newCache = new Map(cache);
+        newCache.set(url, response);
+        setCache(newCache);
+        setLoading(false);
+      }
+      setCharacters(response.data.results);
+      setNextPage(response.data.next);
+      setPrevPage(response.data.previous);
+      setLastPage(Math.ceil(response.data.count / 10).toString());
     }
-    setCharacters(response.data.results);
-    setNextPage(response.data.next);
-    setPrevPage(response.data.previous);
-    setLastPage(Math.ceil(response.data.count / 10).toString());
-  }
-
-  const getPage = () => {
-    getData(page);
-  }
-
-  useEffect(getPage, [page]);
+    getPeople(page);
+  }, [page, cache]);
 
   const searchCharacters = (e) => {
     if (!searchString) return;
