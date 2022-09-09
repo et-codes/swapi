@@ -1,7 +1,6 @@
-import { useState } from 'react';
-import axios from 'axios';
+import { useState, useEffect } from 'react';
 
-const Character = ({ character }) => {
+const Character = ({ character, getData }) => {
   const loadingText =
     <span className="text-muted fst-italic">
       loading...
@@ -9,17 +8,22 @@ const Character = ({ character }) => {
   const [homeworld, setHomeworld] = useState(loadingText);
   const [species, setSpecies] = useState(loadingText);
 
-  if (character.homeworld) {
-    axios.get(character.homeworld)
-      .then(response => setHomeworld(response.data.name))
-      .catch(err => console.error(err));
-  }
+  useEffect(() => {
+    const getCharData = async () => {
+      if (character.homeworld) {
+        const response = await getData(character.homeworld);
+        setHomeworld(response);
+      }
 
-  if (character.species) {
-    axios.get(character.species)
-      .then(response => setSpecies(response.data.name))
-      .catch(err => console.error(err));
-  }
+      if (character.species.length > 0) {
+        const response = await getData(character.species);
+        setSpecies(response);
+      } else {
+        setSpecies('Human');
+      }
+    }
+    getCharData();
+  }, []);
 
   return (
     <tr>
@@ -28,7 +32,7 @@ const Character = ({ character }) => {
       <td>{character.height}cm</td>
       <td>{character.mass}{character.mass === 'unknown' || 'kg'}</td>
       <td>{homeworld}</td>
-      <td>{species || 'Human'}</td>
+      <td>{species}</td>
     </tr>
   );
 };

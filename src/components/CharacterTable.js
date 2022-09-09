@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import axios from 'axios';
 import Character from './Character';
 import PageNav from './PageNav';
 import Table from 'react-bootstrap/Table';
@@ -15,7 +17,25 @@ const CharacterTable = (props) => {
     gotoLastPage
   } = { ...props };
 
-  const charsToDisplay = chars.map(char => <Character key={char.name} character={char} />);
+  const [cache, setCache] = useState(new Map());
+
+  const getData = async (url) => {
+    let response;
+    if (cache.has(url)) {
+      response = cache.get(url);
+    } else {
+      const apiResponse = await axios.get(url);
+      response = apiResponse.data.name
+      const newCache = new Map(cache);
+      newCache.set(url, response);
+      setCache(newCache);
+    }
+    return response;
+  };
+
+  const charsToDisplay = chars.map(char =>
+    <Character key={char.name} character={char} getData={getData} />
+  );
 
   if (isLoading) {
     return (
