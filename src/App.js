@@ -17,6 +17,27 @@ const App = () => {
   const [lastPage, setLastPage] = useState('');
   const [cache, setCache] = useState(new Map());
 
+  // Load cache from localStorage if it exists and is < 72 hours old
+  useEffect(() => {
+    const cacheDate = new Date(localStorage.getItem('cacheDate'));
+    if (new Date() - cacheDate > 259200000) {
+      return localStorage.removeItem('AppCache');
+    }
+    const storedData = localStorage.getItem('AppCache');
+    if (storedData !== null && storedData !== '[]') {
+      const storedCache = new Map(JSON.parse(storedData));
+      setCache(storedCache);
+    }
+  }, []);
+
+  // Save cache to localStorage after every update
+  useEffect(() => {
+    const cacheJSON = JSON.stringify(Array.from(cache.entries()));
+    localStorage.setItem('AppCache', cacheJSON);
+    localStorage.setItem('cacheDate', new Date());
+  }, [cache]);
+
+  // Fetch from and save to cache
   useEffect(() => {
     const getPeople = async (url) => {
       let response;
