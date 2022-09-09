@@ -23,7 +23,9 @@ const CharacterTable = (props) => {
   useEffect(() => {
     const cacheDate = new Date(localStorage.getItem('cacheDate'));
     if (new Date() - cacheDate > 259200000) {
-      return localStorage.removeItem('CharacterTableCache');
+      localStorage.removeItem('AppCache');
+      localStorage.removeItem('CharacterTableCache');
+      return;
     }
     const storedData = localStorage.getItem('CharacterTableCache');
     if (storedData !== null && storedData !== '[]') {
@@ -31,13 +33,6 @@ const CharacterTable = (props) => {
       setCache(storedCache);
     }
   }, []);
-
-  // Save cache to localStorage after every update
-  useEffect(() => {
-    const cacheJSON = JSON.stringify(Array.from(cache.entries()));
-    localStorage.setItem('CharacterTableCache', cacheJSON);
-    localStorage.setItem('cacheDate', new Date());
-  }, [cache]);
 
   // Fetch from and save to cache
   const getData = async (url) => {
@@ -48,6 +43,10 @@ const CharacterTable = (props) => {
       const apiResponse = await axios.get(url);
       response = apiResponse.data.name
       setCache((prevCache) => prevCache.set(url, response));
+
+      const cacheJSON = JSON.stringify(Array.from(cache.entries()));
+      localStorage.setItem('CharacterTableCache', cacheJSON);
+      localStorage.setItem('cacheDate', new Date());
     }
     return response;
   };
