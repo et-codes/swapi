@@ -8,6 +8,7 @@ const Character = ({ character, getData }) => {
   const [homeworld, setHomeworld] = useState(loadingText);
   const [species, setSpecies] = useState(loadingText);
 
+
   useEffect(() => {
     const getCharData = async () => {
       if (character.homeworld) {
@@ -16,7 +17,7 @@ const Character = ({ character, getData }) => {
       }
 
       if (character.species.length > 0) {
-        const response = await getData(character.species);
+        const response = await getData(character.species[0]);
         setSpecies(response);
       } else {
         setSpecies('Human');

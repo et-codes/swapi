@@ -26,9 +26,7 @@ const CharacterTable = (props) => {
     } else {
       const apiResponse = await axios.get(url);
       response = apiResponse.data.name
-      const newCache = new Map(cache);
-      newCache.set(url, response);
-      setCache(newCache);
+      setCache((prevCache) => prevCache.set(url, response));
     }
     return response;
   };

@@ -25,9 +25,7 @@ const App = () => {
       } else {
         setLoading(true);
         response = await axios.get(url);
-        const newCache = new Map(cache);
-        newCache.set(url, response);
-        setCache(newCache);
+        setCache((prevCache) => prevCache.set(url, response));
         setLoading(false);
       }
       setCharacters(response.data.results);
