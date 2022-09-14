@@ -41,6 +41,28 @@ const App = () => {
       } else {
         setLoading(true);
         response = await axios.get(url);
+        for (const character of response.data.results) {
+          // Get homeworld
+          if (cache.has(character.homeworld)) {
+            character.homeworldName = cache.get(character.homeworld);
+          } else {
+            const homeworldResponse = await axios.get(character.homeworld);
+            const homeworldName = homeworldResponse.data.name;
+            setCache((prevCache) => prevCache.set(character.homeworld, homeworldName));
+            character.homeworldName = homeworldName;
+          }
+          // Get species
+          if (character.species.length === 0) {
+            character.speciesName = "Human";
+          } else if (cache.has(character.species[0])) {
+            character.speciesName = cache.get(character.species[0]);
+          } else {
+            const speciesResponse = await axios.get(character.species[0]);
+            const speciesName = speciesResponse.data.name;
+            setCache((prevCache) => prevCache.set(character.species[0], speciesName));
+            character.speciesName = speciesName;
+          }
+        }
         setCache((prevCache) => prevCache.set(url, response));
         setLoading(false);
 
