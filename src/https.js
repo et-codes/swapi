@@ -1,7 +1,27 @@
 import axios from 'axios';
 
-const getCharacters = (url, cache, updateCache) => {
 
+const getCharacters = async (url, cache, updateCache) => {
+  if (cache.has(url)) {
+    return cache.get(url);
+  } else {
+    const response = await axios.get(url);
+    for (const character of response.data.results) {
+      character.homeworldName = await getHomeworldName(
+        character.homeworld,
+        cache,
+        updateCache
+      );
+
+      character.speciesName = await getSpeciesName(
+        character.species,
+        cache,
+        updateCache
+      );
+    }
+    updateCache(url, response);
+    return response;
+  }
 }
 
 const getHomeworldName = async (homeworldUrl, cache, updateCache) => {
@@ -26,8 +46,6 @@ const getSpeciesName = async (speciesArray, cache, updateCache) => {
   }
 }
 
-export default {
-  getCharacters,
-  getHomeworldName,
-  getSpeciesName
-};
+const exports = { getCharacters };
+
+export default exports;

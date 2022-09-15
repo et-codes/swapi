@@ -23,7 +23,6 @@ const useCache = () => {
 
   useEffect(() => {
     cacheModule.updateCache(cache);
-    console.log('cache (LS) has been updated');
   });
 
   return [cache, updateCache];

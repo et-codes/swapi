@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import Container from 'react-bootstrap/Container';
 
 import Header from './components/Header';
@@ -22,37 +21,17 @@ const App = () => {
   // Fetch from and save to cache
   useEffect(() => {
     const getPeople = async (url) => {
-      let response;
+      setLoading(true);
       const charactersResponse = await https.getCharacters(
         url,
         cache,
         updateCache
       );
-      if (cache.has(url)) {
-        response = cache.get(url);
-      } else {
-        setLoading(true);
-        response = await axios.get(url);
-        for (const character of response.data.results) {
-          character.homeworldName = https.getHomeworldName(
-            character.homeworld,
-            cache,
-            updateCache
-          );
-
-          character.speciesName = https.getSpeciesName(
-            character.species,
-            cache,
-            updateCache
-          );
-        }
-        updateCache(url, response);
-        setLoading(false);
-      }
-      setCharacters(response.data.results);
-      setNextPage(response.data.next);
-      setPrevPage(response.data.previous);
-      setLastPage(Math.ceil(response.data.count / 10).toString());
+      setLoading(false);
+      setCharacters(charactersResponse.data.results);
+      setNextPage(charactersResponse.data.next);
+      setPrevPage(charactersResponse.data.previous);
+      setLastPage(Math.ceil(charactersResponse.data.count / 10).toString());
     }
     getPeople(page);
   }, [page]);

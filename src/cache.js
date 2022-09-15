@@ -18,4 +18,6 @@ const getCache = () => {
   return JSON.parse(localStorage.getItem('AppCache')) || [];
 }
 
-export default { isCacheStale, clearCache, updateCache, getCache };
+const exports = { isCacheStale, clearCache, updateCache, getCache };
+
+export default exports;
