@@ -1,6 +1,4 @@
-import { useState, useEffect } from 'react';
-
-const Character = ({ character, getData }) => {
+const Character = ({ character }) => {
   return (
     <tr>
       <td>{character.name}</td>

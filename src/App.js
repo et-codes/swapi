@@ -5,6 +5,8 @@ import Container from 'react-bootstrap/Container';
 import Header from './components/Header';
 import SearchBar from './components/SearchBar';
 import CharacterTable from './components/CharacterTable';
+import useCache from './useCache';
+import https from './https';
 
 const App = () => {
   const baseUrl = 'https://swapi.dev/api/people/';
@@ -15,60 +17,37 @@ const App = () => {
   const [prevPage, setPrevPage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [lastPage, setLastPage] = useState('');
-  const [cache, setCache] = useState(new Map());
-
-  // Load cache from localStorage if it exists and is < 72 hours old
-  useEffect(() => {
-    const cacheDate = new Date(localStorage.getItem('cacheDate'));
-    if (new Date() - cacheDate > 259200000) {
-      localStorage.removeItem('AppCache');
-      localStorage.removeItem('CharacterTableCache');
-      return;
-    }
-    const storedData = localStorage.getItem('AppCache');
-    if (storedData !== null && storedData !== '[]') {
-      const storedCache = new Map(JSON.parse(storedData));
-      setCache(storedCache);
-    }
-  }, []);
+  const [cache, updateCache] = useCache();
 
   // Fetch from and save to cache
   useEffect(() => {
     const getPeople = async (url) => {
       let response;
+      const charactersResponse = await https.getCharacters(
+        url,
+        cache,
+        updateCache
+      );
       if (cache.has(url)) {
         response = cache.get(url);
       } else {
         setLoading(true);
         response = await axios.get(url);
         for (const character of response.data.results) {
-          // Get homeworld
-          if (cache.has(character.homeworld)) {
-            character.homeworldName = cache.get(character.homeworld);
-          } else {
-            const homeworldResponse = await axios.get(character.homeworld);
-            const homeworldName = homeworldResponse.data.name;
-            setCache((prevCache) => prevCache.set(character.homeworld, homeworldName));
-            character.homeworldName = homeworldName;
-          }
-          // Get species
-          if (character.species.length === 0) {
-            character.speciesName = "Human";
-          } else if (cache.has(character.species[0])) {
-            character.speciesName = cache.get(character.species[0]);
-          } else {
-            const speciesResponse = await axios.get(character.species[0]);
-            const speciesName = speciesResponse.data.name;
-            setCache((prevCache) => prevCache.set(character.species[0], speciesName));
-            character.speciesName = speciesName;
-          }
-        }
-        setCache((prevCache) => prevCache.set(url, response));
-        setLoading(false);
+          character.homeworldName = https.getHomeworldName(
+            character.homeworld,
+            cache,
+            updateCache
+          );
 
-        const cacheJSON = JSON.stringify(Array.from(cache.entries()));
-        localStorage.setItem('AppCache', cacheJSON);
-        localStorage.setItem('cacheDate', new Date());
+          character.speciesName = https.getSpeciesName(
+            character.species,
+            cache,
+            updateCache
+          );
+        }
+        updateCache(url, response);
+        setLoading(false);
       }
       setCharacters(response.data.results);
       setNextPage(response.data.next);
@@ -76,7 +55,7 @@ const App = () => {
       setLastPage(Math.ceil(response.data.count / 10).toString());
     }
     getPeople(page);
-  }, [page, cache]);
+  }, [page]);
 
   const searchCharacters = (e) => {
     if (!searchString) return;

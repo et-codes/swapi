@@ -1,5 +1,3 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
 import Character from './Character';
 import PageNav from './PageNav';
 import Table from 'react-bootstrap/Table';
@@ -17,42 +15,8 @@ const CharacterTable = (props) => {
     gotoLastPage
   } = { ...props };
 
-  const [cache, setCache] = useState(new Map());
-
-  // Load cache from localStorage if it exists and is < 72 hours old
-  useEffect(() => {
-    const cacheDate = new Date(localStorage.getItem('cacheDate'));
-    if (new Date() - cacheDate > 259200000) {
-      localStorage.removeItem('AppCache');
-      localStorage.removeItem('CharacterTableCache');
-      return;
-    }
-    const storedData = localStorage.getItem('CharacterTableCache');
-    if (storedData !== null && storedData !== '[]') {
-      const storedCache = new Map(JSON.parse(storedData));
-      setCache(storedCache);
-    }
-  }, []);
-
-  // Fetch from and save to cache
-  const getData = async (url) => {
-    let response;
-    if (cache.has(url)) {
-      response = cache.get(url);
-    } else {
-      const apiResponse = await axios.get(url);
-      response = apiResponse.data.name
-      setCache((prevCache) => prevCache.set(url, response));
-
-      const cacheJSON = JSON.stringify(Array.from(cache.entries()));
-      localStorage.setItem('CharacterTableCache', cacheJSON);
-      localStorage.setItem('cacheDate', new Date());
-    }
-    return response;
-  };
-
   const charsToDisplay = chars.map(char =>
-    <Character key={char.name} character={char} getData={getData} />
+    <Character key={char.name} character={char} />
   );
 
   if (isLoading) {
